@@ -1,5 +1,7 @@
 // Import Modules
-const app = require('express')();
+const express = require('express');
+const app = express();
+const path = require("path")
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -50,6 +52,15 @@ app.use('/',calendar);
 app.use('/',events);
 app.use('/',invitations);
 app.use('/',patientFeatures);
+
+if(process.env.NODE_ENV!="development"){
+  app.use(express.static(path.join(__dirname, 'client/build')));
+
+  app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  });
+}
+
 
 //Start Server
 app.listen(PORT, ()=>{
